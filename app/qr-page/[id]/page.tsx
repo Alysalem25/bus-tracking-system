@@ -23,14 +23,14 @@ const Page = () => {
   }, [id])
 
   const addStudent = async () => {
-    const studentId = prompt('Enter Student ID')
-    if (!studentId) return
+    const studentCode = prompt('Enter Student Code')
+    if (!studentCode) return
 
     try {
       setAdding(true)
       await apiClient.post(
         `/bus-trip/${trip._id}/add-student`,
-        { studentId }
+        { studentCode }
       )
 
       const res = await apiClient.get(`/bus-trip/${id}`)
@@ -98,7 +98,7 @@ const Page = () => {
             <h3 className="font-semibold text-gray-700 mb-2">Bus</h3>
             <p className="text-gray-800">
               Plate: {trip.bus.plateNumber}
-            </p>
+            </p> 
             <p className="text-sm text-gray-800">
               Capacity: {trip.bus.capacity}
             </p>
@@ -114,13 +114,7 @@ const Page = () => {
             </p>
           </div>
 
-          {/* Students */}
-          <div className="bg-gray-50 rounded-xl p-5">
-            <h3 className="font-semibold text-gray-700 mb-2">Students</h3>
-            <p className="text-lg font-bold text-blue-600">
-              {trip.students.length}
-            </p>
-          </div>
+           
         </div>
 
         {/* Action */}

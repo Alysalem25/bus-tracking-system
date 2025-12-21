@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import StudentSidebar from "@/Components/student_sidebar";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "@/Components/ProtectedRoute";
 import apiClient from "@/lib/api";
 
 type LatLng = { lat: number; lng: number };

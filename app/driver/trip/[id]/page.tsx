@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import DriverSidebar from "@/Components/driver_sidebar";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "@/Components/ProtectedRoute";
 import apiClient from "@/lib/api";
 
 const DriverMap = dynamic(() => import("@/Components/DriverMap"), {

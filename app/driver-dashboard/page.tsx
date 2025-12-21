@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import DriverSidebar from '@/Components/driver_sidebar'
 import axios from 'axios'
 import Link from 'next/link'
-import ProtectedRoute from '@/components/ProtectedRoute'
+import ProtectedRoute from '@/Components/ProtectedRoute'
 import apiClient from '@/lib/api'
 import { useAuthStore } from '@/store/authStore'
 

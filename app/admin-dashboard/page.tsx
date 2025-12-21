@@ -4,7 +4,7 @@ import axios from 'axios'
 import React from 'react'
 import Link from 'next/link'
 import AdminSidebar from '@/Components/admin_sidebar'
-import ProtectedRoute from '@/components/ProtectedRoute'
+import ProtectedRoute from '@/Components/ProtectedRoute'
 import apiClient from '@/lib/api'
 
 export default function AdminDashboard() {

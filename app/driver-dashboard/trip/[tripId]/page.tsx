@@ -9,7 +9,7 @@ import dynamic from "next/dynamic";
 import { start } from "repl";
 import apiClient from "@/lib/api";
 
-const DriverMap = dynamic(() => import("@/components/DriverMap"), {
+const DriverMap = dynamic(() => import("@/Components/DriverMap"), {
   ssr: false,
 });
 

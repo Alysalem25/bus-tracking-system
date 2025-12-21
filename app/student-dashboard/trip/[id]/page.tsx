@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import L from "leaflet";
 import StudentSidebar from "@/Components/student_sidebar";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "@/Components/ProtectedRoute";
 import apiClient from "@/lib/api";
 
 const MapContainer = dynamic(()=>import("react-leaflet").then(m=>m.MapContainer),{ssr:false});
