@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
   --background: #ffffff;
@@ -23,4 +24,47 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+.bg_container {
+  /* background: linear-gradient(75% , #151B54 , #2F3CBA ); */
+  background-image: linear-gradient(132deg, #151B54 60%, #2F3CBA);
+}
+
+.EMAIL_INPUT {
+  margin-right: 12px;
+  padding-left: 27px;
+}
+
+
+
+.container_grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: 0 repeat(5, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+.div1 {
+  grid-area: 2 / 2 / 4 / 4;
+}
+
+.div2 {
+  grid-area: 2 / 5 / 4 / 7;
+}
+
+.div3 {
+  grid-area: 5 / 2 / 7 / 4;
+}
+
+.div4 {
+  grid-area: 5 / 5 / 7 / 7;
+}
+
+
+.admin_panel_h2 {
+  margin-bottom: 19px;
 }
