@@ -1,6 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||"https://polytonal-oma-asphaltlike.ngrok-free.dev" || "http://localhost:5000";
+const API_BASE_URL = "https://polytonal-oma-asphaltlike.ngrok-free.dev" || "http://localhost:5000";
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
