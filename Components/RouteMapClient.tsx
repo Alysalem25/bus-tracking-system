@@ -20,24 +20,25 @@ import iconUrl from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 
 const DefaultIcon = L.icon({
-  iconUrl,
-  shadowUrl: iconShadow,
+  // Cast StaticImageData to string for Leaflet
+  iconUrl: iconUrl as unknown as string,
+  shadowUrl: iconShadow as unknown as string,
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
 // Routing Component (PolyLine Builder)
-function RoutingMachine({ stations }) {
+function RoutingMachine({ stations }: { stations: any[] }) {
   const map = useMap();
 
   useEffect(() => {
     if (!map || !stations.length) return;
 
-    const waypoints = stations.map((st) => {
-      const [lng, lat] = st.station.location.coordinates;
+    const waypoints = stations.map((st: any) => {
+      const [lng, lat] = st.station.location.coordinates as [number, number];
       return L.latLng(lat, lng);
     });
 
-    const routingControl = L.Routing.control({
+    const routingControl = (L as any).Routing.control({
       waypoints,
       addWaypoints: false,
       draggableWaypoints: false,
@@ -51,7 +52,7 @@ function RoutingMachine({ stations }) {
         styles: [{ color: "blue", weight: 5 }],
       },
 
-      router: L.Routing.osrmv1({
+      router: (L as any).Routing.osrmv1({
         serviceUrl: "https://router.project-osrm.org/route/v1/",
       }),
     }).addTo(map);
@@ -64,11 +65,11 @@ function RoutingMachine({ stations }) {
   return null;
 }
 
-export default function RouteMapClient({ stations }) {
+export default function RouteMapClient({ stations }: { stations: any[] }) {
   if (!stations || stations.length === 0)
     return <p>No stations available</p>;
 
-  const [lng, lat] = stations[0].station.location.coordinates ;
+  const [lng, lat] = stations[0].station.location.coordinates as [number, number];
 
   return (
     <MapContainer

@@ -46,7 +46,7 @@ const StudentsPage = () => {
       role: 'student'
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['students'] })
+      queryClient.invalidateQueries({ queryKey: ['students'] as const })
       resetForm()
       alert('Student added successfully!')
     },
@@ -90,7 +90,7 @@ const StudentsPage = () => {
   const delete_student = async (student_id: string) => {
     try {
       await apiClient.delete(`/delete-student/${student_id}`);
-      queryClient.invalidateQueries({ queryKey: ['students'] });
+      queryClient.invalidateQueries({ queryKey: ['students'] as const });
       alert('Student deleted successfully!');
     } catch (error) {
       console.error('Error deleting student:', error);

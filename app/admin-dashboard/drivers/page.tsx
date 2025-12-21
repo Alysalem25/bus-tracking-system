@@ -6,7 +6,7 @@ import AdminSidebar from '@/Components/admin_sidebar'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import apiClient from '@/lib/api'
 
-interface driver {
+interface Driver {
   _id: string
   name: string
   email: string
@@ -18,7 +18,7 @@ const DriversPage = () => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
   const [searchTerm, setSearchTerm] = React.useState('')
   const [showForm, setShowForm] = React.useState(false)
-  const [editingDriver, setEditingDriver] = React.useState<driver | null>(null)
+  const [editingDriver, setEditingDriver] = React.useState<Driver | null>(null)
   const [formData, setFormData] = React.useState({
     name: '',
     email: '',
@@ -45,7 +45,7 @@ const DriversPage = () => {
       role: 'driver'
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['drivers'] })
+      queryClient.invalidateQueries({ queryKey: ['drivers'] as const })
       resetForm()
       alert('Driver added successfully!')
     },
@@ -72,23 +72,24 @@ const DriversPage = () => {
       email: '',
       password: '',
       number: '',
+      licenseNumber: ''
     })
     setEditingDriver(null)
     setShowForm(false)
   }
 
   // Filter drivers based on search term
-  const filteredDrivers = drivers.filter((driver: driver) =>
+  const filteredDrivers = drivers.filter((driver: Driver) =>
     driver.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     driver.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    driver.number.toLowerCase().includes(searchTerm.toLowerCase())
+    (driver.number || '').toLowerCase().includes(searchTerm.toLowerCase())
   )
 
 
   const delete_driver = async (driver_id: string) => {
     try {
       await apiClient.delete(`/delete-driver/${driver_id}`);
-      queryClient.invalidateQueries({ queryKey: ['drivers'] });
+      queryClient.invalidateQueries({ queryKey: ['drivers'] as const });
       alert('Driver deleted successfully!');
     } catch (error) {
       console.error('Error deleting driver:', error);
@@ -232,7 +233,7 @@ const DriversPage = () => {
                             <span className="font-semibold">Email:</span> {driver.email}
                           </p>
                           <p className="text-gray-400 text-sm">
-                            <span className="font-semibold">Student Code:</span> {driver.studentCode}
+                            <span className="font-semibold">License Number:</span> {driver.licenseNumber || '-'}
                           </p>
                           {driver.number && (
                             <p className="text-gray-400 text-sm">

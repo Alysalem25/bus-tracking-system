@@ -11,9 +11,10 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import iconRetina from "leaflet/dist/images/marker-icon-2x.png";
 
 const DefaultIcon = L.icon({
-  iconUrl,
-  iconRetinaUrl: iconRetina,
-  shadowUrl: iconShadow,
+  // Next.js imports images as StaticImageData; cast to string for Leaflet IconOptions
+  iconUrl: iconUrl as unknown as string,
+  iconRetinaUrl: iconRetina as unknown as string,
+  shadowUrl: iconShadow as unknown as string,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],

@@ -49,7 +49,7 @@ const Page = () => {
   const addBusMutation = useMutation({
     mutationFn: (newBus: any) => apiClient.post("/add-bus", newBus),
     onSuccess: () => {
-      queryClient.invalidateQueries(["buses"]);
+      queryClient.invalidateQueries({ queryKey: ["buses"] as const });
       setShowAddForm(false);
       setPlateNumber("");
       setCapacity("");
@@ -62,7 +62,7 @@ const Page = () => {
   // --------------------------
   const deleteBusMutation = useMutation({
     mutationFn: (busId: string) => apiClient.delete(`/delete-bus/${busId}`),
-    onSuccess: () => queryClient.invalidateQueries(["buses"]),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["buses"] as const }),
   });
 
   // --------------------------
@@ -71,7 +71,7 @@ const Page = () => {
   const updateBusMutation = useMutation({
     mutationFn: (updatedBus: any) => apiClient.put(`/update-bus/${updatedBus._id}`, updatedBus),
     onSuccess: () => {
-      queryClient.invalidateQueries(["buses"]);
+      queryClient.invalidateQueries({ queryKey: ["buses"] as const });
       setShowEditForm(false);
       setEditBusId("");
       setEditPlateNumber("");
@@ -215,10 +215,10 @@ const Page = () => {
                   </button>
                   <button
                     type="submit"
-                    disabled={addBusMutation.isLoading}
+                    disabled={addBusMutation.isPending}
                     className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
                   >
-                    {addBusMutation.isLoading ? "Adding..." : "Add Bus"}
+                    {addBusMutation.isPending ? "Adding..." : "Add Bus"}
                   </button>
                 </div>
               </form>
@@ -277,10 +277,10 @@ const Page = () => {
                   </button>
                   <button
                     type="submit"
-                    disabled={updateBusMutation.isLoading}
+                    disabled={updateBusMutation.isPending}
                     className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
                   >
-                    {updateBusMutation.isLoading ? "Updating..." : "Update Bus"}
+                    {updateBusMutation.isPending ? "Updating..." : "Update Bus"}
                   </button>
                 </div>
               </form>
@@ -299,7 +299,7 @@ const Page = () => {
                   <p className="text-gray-600 dark:text-gray-400 text-lg">No buses found. Add your first bus!</p>
                 </div>
               ) : (
-                buses.map((bus) => (
+                buses.map((bus: Bus) => (
                   <div key={bus._id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-md transition-shadow">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                       <div>

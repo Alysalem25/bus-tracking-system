@@ -259,6 +259,6 @@ const RouteMapClient = dynamic(() => import("./RouteMapClient"), {
   ssr: false,
 });
 
-export default function RouteMap({ stations }) {
+export default function RouteMap({ stations }: { stations: any[] }) {
   return <RouteMapClient stations={stations} />;
 }

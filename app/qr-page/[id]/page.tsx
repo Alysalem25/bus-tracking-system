@@ -6,7 +6,16 @@ import apiClient from '@/lib/api'
 
 const Page = () => {
   const { id } = useParams()
-  const [trip, setTrip] = useState(null)
+  interface Trip {
+    _id: string;
+    name?: string;
+    status?: string;
+    driver?: { name?: string; email?: string };
+    bus?: { plateNumber?: string; capacity?: number };
+    departureTime?: string;
+    tripDate?: string;
+  }
+  const [trip, setTrip] = useState<Trip | null>(null)
   const [loading, setLoading] = useState(true)
   const [adding, setAdding] = useState(false)
 
@@ -25,6 +34,7 @@ const Page = () => {
   const addStudent = async () => {
     const studentCode = prompt('Enter Student Code')
     if (!studentCode) return
+    if (!trip?._id) return;
 
     try {
       setAdding(true)
@@ -89,18 +99,18 @@ const Page = () => {
           {/* Driver */}
           <div className="bg-gray-50 rounded-xl p-5">
             <h3 className="font-semibold text-gray-700 mb-2">Driver</h3>
-            <p className="text-gray-800">{trip.driver.name}</p>
-            <p className="text-sm text-gray-500">{trip.driver.email}</p>
+            <p className="text-gray-800">{trip.driver?.name || 'N/A'}</p>
+            <p className="text-sm text-gray-500">{trip.driver?.email || 'N/A'}</p>
           </div>
 
           {/* Bus */}
           <div className="bg-gray-50 rounded-xl p-5">
             <h3 className="font-semibold text-gray-700 mb-2">Bus</h3>
             <p className="text-gray-800">
-              Plate: {trip.bus.plateNumber}
+              Plate: {trip.bus?.plateNumber || 'N/A'}
             </p> 
             <p className="text-sm text-gray-800">
-              Capacity: {trip.bus.capacity}
+              Capacity: {trip.bus?.capacity ?? 'N/A'}
             </p>
           </div>
 
@@ -110,7 +120,7 @@ const Page = () => {
             <p>Departure: {trip.departureTime}</p>
             <p>
               Date:{' '}
-              {new Date(trip.tripDate).toLocaleDateString()}
+              {trip.tripDate ? new Date(trip.tripDate).toLocaleDateString() : 'N/A'}
             </p>
           </div>
 

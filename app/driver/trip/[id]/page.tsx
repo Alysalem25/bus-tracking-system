@@ -58,7 +58,7 @@ function DriverTripPageContent() {
 
   const [trip, setTrip] = useState<Trip | null>(null);
   const [driverPos, setDriverPos] = useState<{ lat: number; lng: number } | null>(null);
-  const [tripStatus, setTripStatus] = useState(null);
+  const [tripStatus, setTripStatus] = useState<"ongoing" | "completed" | null>(null);
   const [isTracking, setIsTracking] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -53,11 +53,11 @@ function StudentTripPageContent(){
   return R * 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-function findNearestStation(stations:any[], studentLoc:any) {
-  let nearest = null;
+function findNearestStation(stations:any[], studentLoc:any): any {
+  let nearest: any = null;
   let min = Infinity;
 
-  stations.forEach(s => {
+  stations.forEach((s:any) => {
     const coords = s.station?.location?.coordinates;
     if (!coords) return;
 
@@ -236,7 +236,8 @@ async function buildActualBusRoute(stations: any[]): Promise<any[]> {
     setStation(nearest);
 
     // Only fetch route from student to station (not bus route - use actual route)
-    fetchRoute(studentLoc, { lat: nearest.lat, lng: nearest.lng })
+    const nearestAny = nearest as any;
+    fetchRoute(studentLoc, { lat: nearestAny.lat, lng: nearestAny.lng })
       .then(setStudentRoute)
       .catch(console.error);
 

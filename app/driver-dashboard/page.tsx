@@ -18,8 +18,16 @@ export default function Page() {
 function DriverDashboardContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [driverId, setDriverId] = useState<string | null>(null)
-  const [trips, setTrips] = useState<any[]>([])
-  const [nextTrips, setNextTrips] = useState<any[]>([])
+
+  interface Trip {
+    _id: string
+    name?: string
+    tripDate: string
+    departureTime: string
+  }
+
+  const [trips, setTrips] = useState<Trip[]>([])
+  const [nextTrips, setNextTrips] = useState<Trip[]>([])
   const [loading, setLoading] = useState(true)
 
   const { user } = useAuthStore();
@@ -51,12 +59,12 @@ function DriverDashboardContent() {
         setLoading(true)
 
         const res = await apiClient.get(`/driver-trips/${driverId}`)
-        const allTrips = Array.isArray(res.data?.trips) ? res.data.trips : []
+        const allTrips: Trip[] = Array.isArray(res.data?.trips) ? res.data.trips : []
         console.log("Fetched driver trips:", allTrips)
         setTrips(allTrips)
 
         // Helper to build full trip datetime
-        const getTripStartDate = (trip: any) => {
+        const getTripStartDate = (trip: Trip) => {
           try {
             const base = new Date(trip.tripDate)
             const [h, m] = trip.departureTime.split(":").map(Number)
@@ -70,7 +78,7 @@ function DriverDashboardContent() {
         const now = new Date()
         const next30 = new Date(Date.now() + 30 * 60 * 1000) // next 30 min
 
-        const filtered = allTrips.filter(trip => {
+        const filtered = allTrips.filter((trip: Trip) => {
           const startTime = getTripStartDate(trip)
           if (!startTime) return false
           return startTime >= now && startTime <= next30
@@ -114,7 +122,7 @@ function DriverDashboardContent() {
                 </button>
 
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Driver Dashboard - {user.name}
+                  Driver Dashboard - {user?.name ?? 'Driver'}
                 </h1>
               </div>
             </div>

@@ -70,7 +70,7 @@ const RoutesPage = () => {
   const addRouteMutation = useMutation({
     mutationFn: (newRoute: any) => apiClient.post('/add-route', newRoute),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['routes'] })
+      queryClient.invalidateQueries({ queryKey: ['routes'] as const })
       resetForm()
       alert('Route created successfully!')
     },
@@ -84,7 +84,7 @@ const RoutesPage = () => {
     mutationFn: (updatedRoute: any) =>
       apiClient.put(`/update-route/${updatedRoute._id}`, updatedRoute),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['routes'] })
+      queryClient.invalidateQueries({ queryKey: ['routes'] as const })
       resetForm()
       alert('Route updated successfully!')
     },
@@ -96,7 +96,7 @@ const RoutesPage = () => {
 
   const deleteRouteMutation = useMutation({
     mutationFn: (id: string) => apiClient.delete(`/delete-route/${id}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['routes'] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['routes'] as const })
   })
 
   const handleAddRouteStation = () => {

@@ -13,21 +13,43 @@ const DriverMap = dynamic(() => import("@/Components/DriverMap"), {
   ssr: false,
 });
 
-export default function DriverTripPage({ params }) {
-  const { tripId } = useParams();
+type PageProps = {
+  params: {
+    tripId: string;
+  };
+};
+
+export default function DriverTripPage({ params }: PageProps) {
+  const { tripId } = params;
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [tripStarted, setTripStarted] = useState(false);
   // const [endtrip, setEndTrip] = useState(false);
-  const [trip, setTrip] = useState<Record<string, unknown> | null>(null);
+
+  // Types for trip data
+  interface RouteRef { _id?: string; name?: string; stations?: any }
+  interface EntityRef { _id?: string; name?: string }
+  interface TripType {
+    _id: string
+    name?: string
+    route?: RouteRef | string
+    driver?: EntityRef | string
+    bus?: { plateNumber?: string } | string
+    departureTime?: string
+    tripDate?: string
+    status?: string
+    students?: any[]
+  }
+
+  const [trip, setTrip] = useState<TripType | null>(null);
   const [driverPos, setDriverPos] = useState<{ lat: number; lng: number } | null>(null);
   const [route, setRoute] = useState<[number, number][]>([]);
 
   const [stations, setStations] = useState<
     Array<{
       position: [number, number];
-      name?: string;
-      order?: number;
+      name?: string ;
+    order?: number;
       arrivalTime?: string;
       departureTime?: string;
     }>
@@ -38,7 +60,7 @@ export default function DriverTripPage({ params }) {
       .get(`/trips/${tripId}`)
       .then(async (res) => {
         console.log("Fetched trip data:", res.data);
-        setTrip(res.data);
+        setTrip(res.data as TripType);
 
         // attempt to fetch full route details (stations with locations)
         try {
@@ -106,7 +128,18 @@ export default function DriverTripPage({ params }) {
         const fallbackPositions = fallbackMapped.map((s) => s.position).filter((p): p is [number, number] => p !== null);
         setRoute(fallbackPositions);
         const filteredFallbackStations = fallbackMapped
-          .filter((s): s is { position: [number, number]; name?: string; order?: number; arrivalTime?: string; departureTime?: string } => s.position !== null)
+          .filter(
+            (
+              s
+            ): s is {
+              position: [number, number];
+              name: string | undefined;
+              order: number | undefined;
+              arrivalTime: string | undefined;
+              departureTime: string | undefined;
+            } => s.position !== null
+          )
+
           .map((s) => ({
             position: s.position as [number, number],
             name: s.name,
@@ -152,7 +185,7 @@ export default function DriverTripPage({ params }) {
 
   const start_trip = async () => {
     try {
-      await apiClient.post(`/start-trip/${tripId}`);   
+      await apiClient.post(`/start-trip/${tripId}`);
       setTripStarted(true);
       alert('Trip started successfully!');
     } catch (err) {
@@ -180,7 +213,7 @@ export default function DriverTripPage({ params }) {
   //       setSidebarOpen={setSidebarOpen}
   //       active="dashboard"
   //     />
-  //     <h1>Trip: {trip.route?.name ?? tripId}</h1>
+  //     <h1>Trip: {typeof trip.route === 'object' ? trip.route.name ?? tripId : (typeof trip.route === 'string' ? trip.route : tripId)}</h1>
 
   //     <div style={{ display: "flex", gap: 20 }}>
   //       <div style={{ flex: 1 }}>
@@ -256,15 +289,15 @@ export default function DriverTripPage({ params }) {
 
         <main className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-8">
 
-          <h1>Trip: {trip.route?.name ?? tripId}</h1>
-      {/* <DriverMap
+          <h1>Trip: {typeof trip.route === 'object' ? trip.route.name ?? tripId : (typeof trip.route === 'string' ? trip.route : tripId)}</h1>
+          {/* <DriverMap
                   driverPos={driverPos ? [driverPos.lat, driverPos.lng] : null}
                   stations={stations}
                   firstStation={firstStation}
                   isTracking={!!driverPos}
                 /> */}
           <div style={{ display: "flex", gap: 20 }}>
-           {tripStarted ? (
+            {tripStarted ? (
               <div style={{ flex: 1 }}>
                 <DriverMap
                   driverPos={driverPos ? [driverPos.lat, driverPos.lng] : null}
@@ -294,10 +327,10 @@ export default function DriverTripPage({ params }) {
 
             <div style={{ width: 320 }}>
               <h1>Trip Details</h1>
-              <div><strong>Driver:</strong> {trip.driver?.name ?? trip.driver}</div>
-              <div><strong>Bus:</strong> {trip.bus?.plateNumber ?? "-"}</div>
-              <div><strong>Departure:</strong> {trip.departureTime}</div>
-              <div><strong>Date:</strong> {new Date(trip.tripDate).toLocaleString()}</div>
+              <div><strong>Driver:</strong> {typeof trip.driver === 'object' ? (trip.driver.name ?? String(trip.driver)) : (typeof trip.driver === 'string' ? trip.driver : '-')}</div>
+              <div><strong>Bus:</strong> {typeof trip.bus === 'object' ? (trip.bus.plateNumber ?? '-') : (typeof trip.bus === 'string' ? trip.bus : '-')}</div>
+              <div><strong>Departure:</strong> {trip.departureTime ?? '-'}</div>
+              <div><strong>Date:</strong> {trip.tripDate ? new Date(trip.tripDate).toLocaleString() : '-'}</div>
               <div><strong>Status:</strong> {trip.status}</div>
               <div><strong>Students:</strong> {Array.isArray(trip.students) ? trip.students.length : 0}</div>
 
@@ -315,11 +348,11 @@ export default function DriverTripPage({ params }) {
                 ))}
               </ol>
             </div>
-            </div>
+          </div>
         </main>
       </div>
     </div>
-  
+
   )
 
 }

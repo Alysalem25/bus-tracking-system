@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -9,7 +10,7 @@ export default function Home() {
   const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
   const [loading, setLoading] = useState(false);
-  const [errormsg, setErrormsg] = useState(null);
+  const [errormsg, setErrormsg] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -67,10 +68,11 @@ export default function Home() {
   //   }
   // }; 
 
-  const handellogin = async (e) => {
+  const handellogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    const target = e.target as HTMLFormElement & { email: { value: string }; password: { value: string } };
+    const email = target.email.value;
+    const password = target.password.value;
 
     try {
       const response = await axios.post(
@@ -79,14 +81,15 @@ export default function Home() {
       );
       console.log(" User logged in:");
       gotoDashboard(response.data.user);
-    } catch (error) {
+    } catch (err: unknown) {
+      const error = err as any;
       console.error(" Error logging in user:", error.response?.data || error.message);
-      setErrormsg(error.response.data.message);
+      setErrormsg(error.response?.data?.message || "Login failed");
     }
   }
 
 
-  const gotoDashboard = (user) => {
+  const gotoDashboard = (user: any) => {
     if (user.role === "admin") {
       window.location.href = "/admin-dashboard";
     } else if (user.role === "driver") {

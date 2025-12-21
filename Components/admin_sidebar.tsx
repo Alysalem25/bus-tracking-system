@@ -3,8 +3,14 @@ import React, { use } from 'react'
 import Link from 'next/link'
 import { useState } from 'react';
 
-const admin_sidebar = ({ sidebarOpen, setSidebarOpen , active  }) => {
-const [Active , setActive] = useState(active);
+interface SidebarProps {
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
+  active?: string;
+}
+
+const admin_sidebar = ({ sidebarOpen, setSidebarOpen , active  }: SidebarProps) => {
+  const [Active , setActive] = useState<string | undefined>(active);
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
       {/* Mobile Sidebar Overlay */}

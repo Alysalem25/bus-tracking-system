@@ -87,14 +87,14 @@
 //   const addTripMutation = useMutation({
 //     mutationFn: (newTrip: any) => axios.post('http://localhost:5000/add-trip', newTrip),
 //     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['trips'] })
+//       queryClient.invalidateQueries({ queryKey: ['trips'] as const })
 //       resetForm()
 //     }
 //   })
 
 //   const deleteTripMutation = useMutation({
 //     mutationFn: (id: string) => axios.delete(`http://localhost:5000/trips/${id}`),
-//     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trips'] })
+//     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trips'] as const })
 //   })
 
 //   const handleAddRouteStation = () => {
@@ -1078,7 +1078,7 @@ import apiClient from '@/lib/api'
 interface Bus { _id: string; plateNumber: string; capacity: number }
 interface Driver { _id: string; name: string }
 interface Student { _id: string; name: string; studentCode: string }
-interface RouteType { _id: string; name: string }
+interface Route { _id: string; name: string }
 
 interface Trip {
   _id: string
@@ -1113,17 +1113,17 @@ const TripsPage = () => {
   const queryClient = useQueryClient()
 
   // Fetching Data
-  const { data: buses = [] } = useQuery({
+  const { data: buses = [] } = useQuery<Bus[]>({
     queryKey: ['buses'],
     queryFn: async () => (await apiClient.get('/buses')).data
   })
 
-  const { data: drivers = [] } = useQuery({
+  const { data: drivers = [] } = useQuery<Driver[]>({
     queryKey: ['drivers'],
     queryFn: async () => (await apiClient.get('/drivers')).data
   })
 
-  const { data: routes = [] } = useQuery({
+  const { data: routes = [] } = useQuery<Route[]>({
     queryKey: ['routes'],
     queryFn: async () => {
       const response = await apiClient.get('/routes')
@@ -1131,33 +1131,33 @@ const TripsPage = () => {
     }
   })
 
-  const { data: students = [] } = useQuery({
+  const { data: students = [] } = useQuery<Student[]>({
     queryKey: ['students'],
     queryFn: async () => (await apiClient.get('/students')).data
   })
 
-  const { data: trips = [] } = useQuery({
+  const { data: trips = [] } = useQuery<Trip[]>({
     queryKey: ['trips'],
     queryFn: async () => (await apiClient.get('/trips')).data
   })
 
   // ————————— MUTATIONS —————————
 
-  const addTripMutation = useMutation({
-    mutationFn: (newTrip) => apiClient.post('/add-trip', newTrip),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trips'] })
+  const addTripMutation = useMutation<any, any, any>({
+    mutationFn: (newTrip: any) => apiClient.post('/add-trip', newTrip),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trips'] as const })
   })
 
-  const editTripMutation = useMutation({
-    mutationFn: (updated) =>
+  const editTripMutation = useMutation<any, any, any>({
+    mutationFn: (updated: any) =>
       apiClient.put(`/trips/${updated._id}`, updated),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trips'] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trips'] as const })
   })
 
-  const deleteTripMutation = useMutation({
+  const deleteTripMutation = useMutation<any, any, string>({
     mutationFn: (id: string) =>
       apiClient.delete(`/trips/${id}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trips'] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trips'] as const })
   })
 
   // ————————— HANDLERS —————————

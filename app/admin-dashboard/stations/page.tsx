@@ -50,7 +50,7 @@ const StationsPage = () => {
   const addStationMutation = useMutation({
     mutationFn: (newStation: any) => apiClient.post('/add-station', newStation),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stations'] })
+      queryClient.invalidateQueries({ queryKey: ['stations'] as const })
       resetForm()
       alert('Station added successfully!')
     },
@@ -64,7 +64,7 @@ const StationsPage = () => {
     mutationFn: (updatedStation: any) =>
       apiClient.put(`/update-station/${updatedStation._id}`, updatedStation),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stations'] })
+      queryClient.invalidateQueries({ queryKey: ['stations'] as const })
       resetForm()
       alert('Station updated successfully!')
     },
@@ -76,7 +76,7 @@ const StationsPage = () => {
 
   const deleteStationMutation = useMutation({
     mutationFn: (id: string) => apiClient.delete(`/delete-station/${id}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['stations'] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['stations'] as const })
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
