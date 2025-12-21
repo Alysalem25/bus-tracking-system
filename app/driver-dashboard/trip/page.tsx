@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
-export class page extends Component {
+export class page {
   static propTypes = {
 
   }
