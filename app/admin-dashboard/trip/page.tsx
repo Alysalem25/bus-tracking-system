@@ -412,9 +412,9 @@
 //                         ))}
 //                       </div>
 //                     )}
-//                     {trip.route && trip.route.length > 0 && (
+//                     {trip.route && typeof trip.route === 'object' && 'stations' in (trip.route as any) && (trip.route as any).stations?.length > 0 && (
 //                       <div className="mt-2">
-//                         <p className="text-white"><strong>Stations:</strong> {trip.route.length}</p>
+//                         <p className="text-white"><strong>Stations:</strong> {(trip.route as any).stations?.length}</p>
 //                       </div>
 //                     )}
 //                     {trip.students && trip.students.length > 0 && (
@@ -1008,11 +1008,11 @@
 //                                                     </div>
 //                                                 </div>
 //                                             )}
-//                                             {trip.route && trip.route.length > 0 && (
+//                                             {trip.route && typeof trip.route === 'object' && 'stations' in (trip.route as any) && (trip.route as any).stations?.length > 0 && (
 //                                                 <div className="mt-4">
 //                                                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Route</p>
 //                                                     <div className="space-y-2">
-//                                                         {trip.route.map((routeItem, index) => (
+//                                                         {(trip.route as any).stations.map((routeItem: any, index: number) => (
 //                                                             <div key={index} className="flex items-center gap-2 text-sm">
 //                                                                 <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">
 //                                                                     {index + 1}
@@ -1078,14 +1078,14 @@ import apiClient from '@/lib/api'
 interface Bus { _id: string; plateNumber: string; capacity: number }
 interface Driver { _id: string; name: string }
 interface Student { _id: string; name: string; studentCode: string }
-interface Route { _id: string; name: string }
+interface Route { _id: string; name: string; description?: string }
 
 interface Trip {
   _id: string
   bus: Bus | null
   driver: Driver | null
   students: Student[]
-  route: string        // route name only
+  route: Route | string        // can be object (populated) or string
   tripDate: string
   departureTime: string
   daysOfWeek: number[]
@@ -1120,8 +1120,13 @@ const TripsPage = () => {
 
   const { data: drivers = [] } = useQuery<Driver[]>({
     queryKey: ['drivers'],
-    queryFn: async () => (await apiClient.get('/drivers')).data
+    queryFn: async () => {
+      const response = await apiClient.get('/drivers')
+      return response.data.drivers || response.data || []
+    }
   })
+
+  console.log("drivers", drivers)
 
   const { data: routes = [] } = useQuery<Route[]>({
     queryKey: ['routes'],
@@ -1133,7 +1138,10 @@ const TripsPage = () => {
 
   const { data: students = [] } = useQuery<Student[]>({
     queryKey: ['students'],
-    queryFn: async () => (await apiClient.get('/students')).data
+    queryFn: async () => {
+      const response = await apiClient.get('/students')
+      return response.data.students || response.data || []
+    }
   })
 
   const { data: trips = [] } = useQuery<Trip[]>({
@@ -1244,7 +1252,7 @@ const TripsPage = () => {
       departureTime: trip.departureTime,
       daysOfWeek: trip.daysOfWeek || [],
       repeatWeekly: trip.repeatWeekly,
-      route: trip.route   // route NAME
+      route: typeof trip.route === 'object' ? (trip.route as any)._id : trip.route   // route ID
     })
     setShowForm(true)
   }
@@ -1437,7 +1445,7 @@ const TripsPage = () => {
                   <div>
                     <p><strong>Bus:</strong> {trip.bus?.plateNumber}</p>
                     <p><strong>Driver:</strong> {trip.driver?.name}</p>
-                    <p><strong>Route:</strong> {trip.route}</p>
+                    <p><strong>Route:</strong> {typeof trip.route === 'object' ? trip.route?.name : trip.route}</p>
                     <p><strong>Date:</strong> {formatDate(trip.tripDate)}</p>
                     <p><strong>Time:</strong> {trip.departureTime}</p>
                   </div>
