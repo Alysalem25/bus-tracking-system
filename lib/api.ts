@@ -12,7 +12,7 @@ export interface User {
   licenseNumber?: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://8b55-154-180-27-58.ngrok-free.app" || "http://localhost:5000";
 
 const http = axios.create({
   baseURL: API_BASE_URL,
