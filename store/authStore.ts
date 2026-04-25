@@ -37,7 +37,10 @@ export const useAuthStore = create<AuthState>()(
       login: async (email: string, password: string) => {
         try {
           set({ isLoading: true });
+          alert("trying to login");
           const response = await apiClient.post("/login", { email, password });
+          console.log("✅ User logged in:", response.data);
+          alert("Login successful!");
           const { user, accessToken } = response.data.data;
 
           if (typeof window !== "undefined") {
@@ -52,6 +55,7 @@ export const useAuthStore = create<AuthState>()(
           });
         } catch (error: any) {
           set({ isLoading: false });
+          console.error("Login error:", error);
           throw new Error(
             error.response?.data?.message || "Login failed. Please check your credentials."
           );

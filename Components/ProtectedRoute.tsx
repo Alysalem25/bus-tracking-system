@@ -20,6 +20,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
   useEffect(() => {
     if (!isLoading) {
       if (!isAuthenticated) {
+        alert("You are not logged in. Redirecting to login page...");
         router.push("/login");
         return;
       }
@@ -27,10 +28,13 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
       if (allowedRoles && user && !allowedRoles.includes(user.role)) {
         // Redirect to appropriate dashboard based on role
         if (user.role === "admin") {
+          alert("admin")
           router.push("/admin-dashboard");
         } else if (user.role === "driver") {
+          alert("driver")
           router.push("/driver-dashboard");
         } else {
+          alert("student")
           router.push("/student-dashboard");
         }
         return;

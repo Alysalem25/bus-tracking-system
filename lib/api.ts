@@ -12,7 +12,9 @@ export interface User {
   licenseNumber?: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://8b55-154-180-27-58.ngrok-free.app" || "http://localhost:5000";
+/** Backend base URL (ngrok, localhost, or production API). Prefer NEXT_PUBLIC_API_URL in .env.local. */
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? "https://ddf7-154-180-27-58.ngrok-free.app";
 
 const http = axios.create({
   baseURL: API_BASE_URL,
@@ -29,6 +31,9 @@ function processQueue(error: unknown, token: string | null = null) {
 }
 
 http.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  if (config.headers && API_BASE_URL.includes("ngrok")) {
+    config.headers["ngrok-skip-browser-warning"] = "true";
+  }
   const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
   if (token && config.headers) config.headers.Authorization = `Bearer ${token}`;
   return config;
